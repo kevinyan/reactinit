@@ -12,6 +12,8 @@ module.exports = {
     },
     resolve: {
         alias: {
+            react: "preact-compat",
+            "react-dom": "preact-compat",
             "@super-fe": "/Users/baidu/kevingithub/react-components/@super-fe"
         }
     },
@@ -27,8 +29,17 @@ module.exports = {
             },
             {
                 test: /\.js$/,
-                use: "babel-loader",
-                exclude: /node_modules/
+                exclude: /node_modules/,
+                use: {
+                    loader: "babel-loader",
+                    options: {
+                        presets: ["@babel/preset-env", "@babel/preset-react"],
+                        plugins: [
+                            "@babel/plugin-proposal-class-properties",
+                            "@babel/plugin-transform-runtime"
+                        ]
+                    }
+                }
             }
         ]
     },

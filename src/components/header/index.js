@@ -1,13 +1,13 @@
 import React from "react";
-import style from "./style.css";
+import style from "./style.less";
 
 const Header = () => (
-    <header class={style.header}>
-        <h1>Preact App</h1>
+    <header class="header">
+        <h1>header-components</h1>
         <nav>
-            <a>baidu</a>
-            <a>kevin</a>
-            <a>emily</a>
+            <a>header 1</a>
+            <a>header 2</a>
+            <a>header 3</a>
         </nav>
     </header>
 );

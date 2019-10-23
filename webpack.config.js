@@ -12,14 +12,14 @@ module.exports = {
     },
     resolve: {
         alias: {
-            "@super-fe": "path to local"
+            "@super-fe": "/Users/baidu/kevingithub/react-components/@super-fe"
         }
     },
     module: {
         rules: [
             {
-                test: /\.css$/,
-                use: ["style-loader", "css-loader"]
+                test: /\.(css|less)$/,
+                use: ["style-loader", "css-loader", "less-loader"]
             },
             {
                 test: /\.(png|svg|jpg|gif)$/,

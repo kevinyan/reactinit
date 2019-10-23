@@ -11,7 +11,7 @@ export default class App extends React.Component {
     render() {
         return (
             <div id="app">
-                <h2>Hello World</h2>
+                <h2>Hello World - Root </h2>
                 <Header />
                 <Item />
             </div>

@@ -1,13 +1,13 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const webpack = require("webpack");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 module.exports = {
-    mode: "production",
     entry: "./src/index.js",
     output: {
-        filename: "output.js",
+        filename: "[name].[hash:8].js",
         path: path.resolve(__dirname, "dist")
     },
     resolve: {
@@ -17,11 +17,32 @@ module.exports = {
             "@super-fe": "/Users/baidu/kevingithub/react-components/@super-fe"
         }
     },
+    optimization: {
+        splitChunks: {
+            minSize: 40000,
+            cacheGroups: {
+                commons: {
+                    test: /style\.less$/,
+                    name: "synccss",
+                    chunks: "all",
+                    enforce: true,
+                    priority: 20
+                }
+            }
+        }
+    },
     module: {
         rules: [
             {
-                test: /\.(css|less)$/,
-                use: ["style-loader", "css-loader", "less-loader"]
+                test: /\.(c|le|sa)ss$/,
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader
+                    },
+                    // "style-loader",
+                    "css-loader",
+                    "less-loader"
+                ]
             },
             {
                 test: /\.(png|svg|jpg|gif)$/,
@@ -43,17 +64,16 @@ module.exports = {
             }
         ]
     },
-    devtool: "inline-source-map",
-    devServer: {
-        contentBase: "./dist",
-        hot: true
-    },
     plugins: [
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
             title: "管理输出",
             template: "./template/index.html"
         }),
-        new webpack.HotModuleReplacementPlugin()
+        new MiniCssExtractPlugin({
+            filename: "[name].[hash:8].css",
+            ignoreOrder: false
+        }),
+        new OptimizeCssAssetsPlugin()
     ]
 };

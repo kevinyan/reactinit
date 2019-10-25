@@ -88,14 +88,8 @@
             Object.keys(this.html).forEach(function(htmlFileName) {
                 var html = _this.html[htmlFileName];
                 Object.keys(_this.css).forEach(function(key) {
-                    if (key.indexOf("main") < 0) {
-                        html = Plugin.addStyle(
-                            html,
-                            _this.css[key],
-                            replaceConfig
-                        );
-                        html = Plugin.removeLinkTag(html, publicPath + key);
-                    }
+                    html = Plugin.addStyle(html, _this.css[key], replaceConfig);
+                    html = Plugin.removeLinkTag(html, publicPath + key);
                 });
                 html = Plugin.cleanUp(html, replaceConfig);
                 assets[htmlFileName] = {

@@ -5,80 +5,100 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const HTMLInlineCSSWebpackPlugin = require("./webpackplugin/css-inline-plugin")
     .default;
+const IfPlugin = require("if-webpack-plugin");
+const PROJECT = require("./project.config");
 
-module.exports = {
-    entry: "./src/index.js",
-    output: {
-        filename: "[name].[hash:8].js",
-        path: path.resolve(__dirname, "dist")
-    },
-    resolve: {
-        alias: {
-            react: "preact-compat",
-            "react-dom": "preact-compat",
-            "@super-fe": "/Users/baidu/kevingithub/react-components/@super-fe"
-        }
-    },
-    optimization: {
-        splitChunks: {
-            minSize: 40000,
-            cacheGroups: {
-                commons: {
-                    test: /style\.less$/,
-                    name: "synccss",
-                    chunks: "all",
-                    enforce: true,
-                    priority: 20
-                }
-            }
-        }
-    },
-    module: {
-        rules: [
-            {
-                test: /\.(c|le|sa)ss$/,
-                use: [
-                    {
-                        loader: MiniCssExtractPlugin.loader
-                    },
-                    // "style-loader",
-                    "css-loader",
-                    "less-loader"
-                ]
+const UploadPlugin = require("deploy-files/webpack-plugin");
+
+module.exports = env => {
+    console.log("=====");
+    console.log(path.resolve(__dirname, "../react-components"));
+
+    return {
+        entry: "./src/index.js",
+        output: {
+            filename: "[name].[hash:8].js",
+            path: path.resolve(__dirname, "dist")
+        },
+        resolve: {
+            alias: {
+                react: "preact-compat",
+                "react-dom": "preact-compat"
             },
-            {
-                test: /\.(png|svg|jpg|gif)$/,
-                use: ["file-loader"]
-            },
-            {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                use: {
-                    loader: "babel-loader",
-                    options: {
-                        presets: ["@babel/preset-env", "@babel/preset-react"],
-                        plugins: [
-                            "@babel/plugin-proposal-class-properties",
-                            "@babel/plugin-transform-runtime"
-                        ]
+            modules: [
+                path.resolve(__dirname, "../react-components/"),
+                "node_modules"
+            ]
+        },
+        optimization: {
+            splitChunks: {
+                minSize: 40000,
+                cacheGroups: {
+                    commons: {
+                        test: /style\.less$/,
+                        name: "synccss",
+                        chunks: "all",
+                        enforce: true,
+                        priority: 20
                     }
                 }
             }
+        },
+        module: {
+            rules: [
+                {
+                    test: /\.(c|le|sa)ss$/,
+                    use: [
+                        {
+                            loader: MiniCssExtractPlugin.loader
+                        },
+                        // "style-loader",
+                        "css-loader",
+                        "less-loader"
+                    ]
+                },
+                {
+                    test: /\.(png|svg|jpg|gif)$/,
+                    use: ["file-loader"]
+                },
+                {
+                    test: /\.js$/,
+                    exclude: /node_modules/,
+                    use: {
+                        loader: "babel-loader",
+                        options: {
+                            presets: [
+                                "@babel/preset-env",
+                                "@babel/preset-react"
+                            ],
+                            plugins: [
+                                "@babel/plugin-proposal-class-properties",
+                                "@babel/plugin-transform-runtime"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        plugins: [
+            new CleanWebpackPlugin(),
+            new HtmlWebpackPlugin({
+                title: "管理输出",
+                template: "./template/index.html"
+            }),
+            new MiniCssExtractPlugin({
+                filename: "[name].[hash:8].css",
+                ignoreOrder: false
+            }),
+            new HTMLInlineCSSWebpackPlugin({
+                exclude: ["main"]
+            }),
+            new OptimizeCssAssetsPlugin(),
+
+            new IfPlugin(
+                process.env.NODE_ENV === "fsr",
+                new UploadPlugin(PROJECT.reciverConf)
+            )
         ]
-    },
-    plugins: [
-        new CleanWebpackPlugin(),
-        new HtmlWebpackPlugin({
-            title: "管理输出",
-            template: "./template/index.html"
-        }),
-        new MiniCssExtractPlugin({
-            filename: "[name].[hash:8].css",
-            ignoreOrder: false
-        }),
-        new HTMLInlineCSSWebpackPlugin({
-            exclude: ["main"]
-        }),
-        new OptimizeCssAssetsPlugin()
-    ]
+    };
 };

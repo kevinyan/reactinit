@@ -1,7 +1,0 @@
-{
-    "reciverConf": {
-        "receiver": "http://xxx.com:8527/",
-        "templatePath": "/home/work/orp",
-        "staticPath": "/home/work/orp/nginx.static/htdocs"
-    }
-}

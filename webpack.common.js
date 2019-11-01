@@ -1,6 +1,5 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const HTMLInlineCSSWebpackPlugin = require("./webpackplugin/css-inline-plugin")
@@ -9,11 +8,10 @@ const IfPlugin = require("if-webpack-plugin");
 const PROJECT = require("./project.config");
 
 const UploadPlugin = require("deploy-files/webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const WriteFilePlugin = require("write-file-webpack-plugin");
 
 module.exports = env => {
-    console.log("=====");
-    console.log(path.resolve(__dirname, "../react-components"));
-
     return {
         entry: "./src/index.js",
         output: {
@@ -81,10 +79,20 @@ module.exports = env => {
             ]
         },
         plugins: [
-            new CleanWebpackPlugin(),
+            // new CleanWebpackPlugin({
+            // }),
             new HtmlWebpackPlugin({
+                inject: false,
+                cache: false,
                 title: "管理输出",
-                template: "./template/index.html"
+                template: "./template/index/index.tpl",
+                filename: `${__dirname}/dist/template/index/index.tpl`
+            }),
+            new HtmlWebpackPlugin({
+                inject: false,
+                cache: false,
+                template: "./template/layout.tpl",
+                filename: `${__dirname}/dist/template/layout.tpl`
             }),
             new MiniCssExtractPlugin({
                 filename: "[name].[hash:8].css",
@@ -98,7 +106,11 @@ module.exports = env => {
             new IfPlugin(
                 process.env.NODE_ENV === "fsr",
                 new UploadPlugin(PROJECT.reciverConf)
-            )
+            ),
+            new WriteFilePlugin({
+                test: /\.tpl$/,
+                useHashIndex: true
+            })
         ]
     };
 };

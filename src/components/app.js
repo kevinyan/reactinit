@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 
-import Header from "./header";
-import Item from "@super-fe/item";
-import Item02 from "@super-fe/item02";
+import Header from './header';
+import Item from '@super-fe/components1';
+import Item02 from '@super-fe/components2';
 
 export default class App extends React.Component {
     handleRoute = e => {
@@ -10,6 +10,8 @@ export default class App extends React.Component {
     };
 
     render() {
+        // alert.log(aaa);
+
         return (
             <div id="app">
                 <h2>Hello World - Root </h2>

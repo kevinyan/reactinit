@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <title>Test</title>
+        <script
+            type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/raven.js/3.26.2/angular,console,ember,require,vue/raven.js"
+            crossorigin="anonymous"
+        ></script>
+        <script>
+            try {
+                SENTRY.init({
+                    pd: 'test',
+                    release: 'test@BRANCH_001'
+                });
+            } catch (e) {
+                console.log(e);
+            }
+        </script>
+    </head>
+    <body>
+        test
+    </body>
+</html>

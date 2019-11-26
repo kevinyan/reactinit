@@ -23,7 +23,7 @@ module.exports = env => {
                 'react-dom': 'preact-compat'
             },
             modules: [
-                path.resolve(__dirname, '../react-components/'),
+                path.resolve(__dirname, PROJECT.componentsDir),
                 'node_modules'
             ]
         },

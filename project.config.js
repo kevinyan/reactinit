@@ -7,12 +7,25 @@ const path = require('path');
 const outputDir = 'dist';
 
 module.exports = {
+    componentsDir: '/Users/xxx/kevingithub/react-components',
     reciverConf: {
         receiver: 'http://xxx.com:8527/',
         templatePath: '/home/work/orp',
         staticPath: '/home/work/orp/nginx.static/htdocs'
     },
     middlewares: [
+        () => {
+            return require('mock-server')({
+                contentBase: path.join(__dirname, './' + outputDir + '/'),
+                rootDir: path.join(__dirname, './mock'),
+                processors: [
+                    `smarty?router=/template/*&baseDir=${path.join(
+                        __dirname,
+                        `./${outputDir}/template`
+                    )}&dataDir=${path.join(__dirname, './mock/_data_')}`
+                ]
+            });
+        },
         () => {
             return require('apim-tools').express({
                 logLevel: 'warn',
